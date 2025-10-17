@@ -18,6 +18,10 @@ export const numberToCurrency = (number, locale = 'id-ID', currency = 'IDR') => 
     }).format(number);
 };
 
+export const numberFormat = (value) => {
+    return new Intl.NumberFormat('id-ID').format(value);
+};
+
 export const formatDateTime = (dateString) => {
     const options = {
         year: 'numeric',
