@@ -69,7 +69,11 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
             setFormData({
                 id: payload.id || '',
                 supplier_id: payload.supplier_id || '',
-                order_items: payload.order_items || [
+                order_items: payload.order_items.map(item => ({
+                    item_id: item.item_id || '',
+                    quantity: item.quantity || '',
+                    sub_total: item.subtotal || ''
+                })) || [
                     {
                         item_id: '',
                         quantity: '',
