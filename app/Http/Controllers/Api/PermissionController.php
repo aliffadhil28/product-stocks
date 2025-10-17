@@ -123,27 +123,30 @@ class PermissionController extends ApiGatewayController
     public function storePermission(Request $request){
         $request->validate([
             'menu' => 'required|string|max:255',
-            'permission' => 'required|string|max:255|unique:permissions,name',
+            'permission' => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
         try {
-            $permissionName = strtolower($request->menu) . '/' . $request->permission;
-            $exist = Permission::where('name', $permissionName)->first();
+            $permissionName = str_replace(' ', '-', strtolower($request->menu)) . '/' . $request->permission;
+            $exist = Permission::where([
+                ['name', '=', $permissionName],
+                ['guard_name', '=', 'web']
+            ])->first();
             if($exist){
                 return response()->json([
                     'message' => 'Permission already exists',
                 ], 400);
             }
 
-            $permission = Permission::create([
-                'name' => $permissionName,
-                'guard_name' => 'web',
-            ]);
+            $permission = new Permission();
+            $permission->name = $permissionName;
+            $permission->guard_name = 'web';
+            $permission->save();
             
             $adminRole = Role::where('name', 'admin')->first();
             if($adminRole){
-                $adminRole->givePermissionTo($permissionName);
+                $adminRole->givePermissionTo($permission);
             }
 
             DB::commit();
@@ -156,6 +159,8 @@ class PermissionController extends ApiGatewayController
             return response()->json([
                 'message' => 'Failed to create permission',
                 'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
             ], 500);
         }
     }
