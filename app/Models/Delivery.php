@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +19,16 @@ class Delivery extends Model
         'approved_by',
         'approved_at',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $model) {
+            // hanya set code jika belum diisi
+            if (empty($model->code)) {
+                $model->code = CodeGeneratorService::generate('deliveries', 'DLV');
+            }
+        });
+    }
 
     public function salesOrder()
     {
