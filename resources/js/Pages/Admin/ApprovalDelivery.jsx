@@ -1,7 +1,6 @@
 import DashboardLayout from '@/Layouts/DashboardLayout'
 import { useState, useEffect, useMemo } from 'react'
 import LucideIcon from '@/Components/LucideIcons';
-import FormPage from './Users/FormPage';
 import {
     Card,
     CardContent,
@@ -9,10 +8,29 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/Components/ui/card"
-import { Separator } from '@/Components/ui/separator';
+} from "@/components/ui/card"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Separator } from '@/components/ui/separator';
 import { hasPermission, hasRole } from '@/utils/userAccess';
-import { encodeActions } from '@/utils/encodeActions';
 import { fetchPost } from '@/hooks/Api';
 
 // TanStack Table imports
@@ -24,15 +42,17 @@ import {
     getSortedRowModel,
     flexRender,
     createColumnHelper,
-} from '@tanstack/react-table'
-import DetailPage from './Users/DetailPage';
+} from '@tanstack/react-table';
+import DetailPage from './Delivery/DetailPage';
 import { toast } from 'sonner';
+import { formatDateTime } from '@/utils/helper';
+import StatusBadge from '@/Components/StatusBadge';
 
-const Users = () => {
+const ApprovalDelivery = () => {
     const [isIndexShown, setIsIndexShown] = useState(true);
     const [mode, setMode] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [deliveries, setDeliveries] = useState([]);
     const [sorting, setSorting] = useState([]);
     const [filtering, setFiltering] = useState('');
     const [payload, setPayload] = useState(null);
@@ -40,33 +60,50 @@ const Users = () => {
         pageIndex: 0,
         pageSize: 10,
     });
+    const [showRejectDialog, setShowRejectDialog] = useState(false);
+    const [rejectReason, setRejectReason] = useState('');
+    const [selectedDelivery, setSelectedDelivery] = useState(null);
 
-    const handleAdd = () => {
-        setIsIndexShown(false);
-        setMode('add');
-    }
+    const controller = "ApprovalDeliveryController";
 
-    const handleEdit = (user) => {
-        setIsIndexShown(false);
-        setMode('edit');
-        // Pass user data to FormPage
-        // You might need to set selected user state here
-        setPayload(user);
-    }
-
-    const handleDelete = async (userId) => {
-        if (confirm('Are you sure you want to delete this user?')) {
-            try {
-                const response = await fetchPost('UserController', 'destroy', { id: userId });
-                if (response.success) {
-                    // Remove user from state
-                    setUsers(users.filter(user => user.id !== userId));
-                    // Or refetch users
-                    fetchUsers();
-                }
-            } catch (error) {
-                console.error('Error deleting user:', error);
+    const handleApprove = async (deliveryId) => {
+        try {
+            const response = await fetchPost(controller, 'approve', { id: deliveryId });
+            if (response) {
+                fetchDeliveries();
+                toast.success(response.message || 'Delivery approved successfully');
             }
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
+    }
+
+    const handleRejectClick = (delivery) => {
+        setSelectedDelivery(delivery);
+        setRejectReason('');
+        setShowRejectDialog(true);
+    }
+
+    const handleRejectSubmit = async () => {
+        if (!rejectReason.trim()) {
+            toast.error('Please provide a reason for rejection');
+            return;
+        }
+
+        try {
+            const response = await fetchPost(controller, 'reject', { 
+                id: selectedDelivery.id,
+                rejection_reason: rejectReason 
+            });
+            if (response) {
+                fetchDeliveries();
+                setShowRejectDialog(false);
+                setRejectReason('');
+                setSelectedDelivery(null);
+                toast.success(response.message || 'Delivery rejected successfully');
+            }
+        } catch (error) {
+            toast.error(error.response.data.message || 'Failed to reject delivery');
         }
     }
 
@@ -76,40 +113,25 @@ const Users = () => {
         setPayload(null);
     }
 
-    const handleSubmit = async (formData) => {
-        try {
-            if (mode === 'add') {
-                const response = await fetchPost('UserController', 'store', formData);
-                if (response) {
-                    fetchUsers(); // Refresh the table
-                    handleCancel();
-                    toast.success(response.message || 'User created successfully');
-                }
-            } else if (mode === 'edit' && formData?.id) {
-                const response = await fetchPost('UserController', 'update', { id: formData.id, ...formData });
-                if (response) {
-                    fetchUsers(); // Refresh the table
-                    handleCancel();
-                    toast.success(response.message || 'User updated successfully');
-                }
-            }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-        }
-    }
-
-    const fetchUsers = async () => {
+    const fetchDeliveries = async () => {
         setIsLoading(true);
         try {
-            const response = await fetchPost('UserController', 'index', {});
+            const response = await fetchPost(controller, 'index', {});
             if (response) {
-                setUsers(response.data || []);
+                setDeliveries(response.data || []);
             }
         } catch (error) {
-            toast.error('Error fetching users:', error);
+            toast.error('Error fetching deliveries');
+            console.error('Error:', error);
         } finally {
             setIsLoading(false);
         }
+    }
+
+    const handleView = (item) => {
+        setIsIndexShown(false);
+        setMode('view');
+        setPayload(item);
     }
 
     // Column definitions using TanStack Table
@@ -117,72 +139,85 @@ const Users = () => {
 
     const columns = useMemo(
         () => [
-            columnHelper.accessor('id', {
-                header: 'ID',
+            columnHelper.accessor('code', {
+                header: 'Code',
                 cell: info => info.getValue(),
             }),
-            columnHelper.accessor('name', {
-                header: 'Name',
+            columnHelper.accessor('sales_order.code', {
+                header: 'SO Code',
                 cell: info => info.getValue(),
             }),
-            columnHelper.accessor('email', {
-                header: 'Email',
+            columnHelper.accessor('user.name', {
+                header: 'User',
                 cell: info => info.getValue(),
             }),
-            columnHelper.accessor('role', {
-                header: 'Role',
-                cell: info => {
-                    // roles is expected to be an array of role objects
-                    const roles = info.getValue();
-                    if (!roles || !Array.isArray(roles) || roles.length === 0) return '-';
-                    return roles.map(role => role.name).join(', ');
-                }
+            columnHelper.accessor('warehouse.name', {
+                header: 'Warehouse',
+                cell: info => info.getValue(),
+            }),
+            columnHelper.accessor('status', {
+                header: 'Status',
+                cell: info => <StatusBadge status={info.getValue()} />,
             }),
             columnHelper.accessor('created_at', {
                 header: 'Created At',
-                cell: info => new Date(info.getValue()).toLocaleDateString(),
+                cell: info => formatDateTime(info.getValue()),
             }),
             columnHelper.display({
                 id: 'actions',
                 header: 'Actions',
                 cell: info => (
                     <div className="flex gap-2">
-                        {(hasPermission('users/show') || hasRole('admin')) && (
+                        {(hasPermission('approval-delivery/view') || hasRole('admin')) && (
                             <button
-                                onClick={() => handleView(info.row.original)}
+                                onClick={() => { handleView(info.row.original) }}
                                 className="p-1 text-blue-600 hover:text-blue-800 transition-colors"
                                 title="View"
                             >
                                 <LucideIcon name="Eye" className="w-4 h-4" />
                             </button>
                         )}
-                        {(hasPermission('users/edit') || hasRole('admin')) && (
-                            <button
-                                onClick={() => handleEdit(info.row.original)}
-                                className="p-1 text-green-600 hover:text-green-800 transition-colors"
-                                title="Edit"
-                            >
-                                <LucideIcon name="Edit" className="w-4 h-4" />
-                            </button>
-                        )}
-                        {(hasPermission('users/delete') || hasRole('admin')) && (
-                            <button
-                                onClick={() => handleDelete(info.row.original.id)}
-                                className="p-1 text-red-600 hover:text-red-800 transition-colors"
-                                title="Delete"
-                            >
-                                <LucideIcon name="Trash2" className="w-4 h-4" />
-                            </button>
+                        {(hasPermission('approval-delivery/approve') || hasRole('admin')) && info.row.original.status === 'pending' && (
+                            <>
+                                <AlertDialog>
+                                    <AlertDialogTrigger className='p-1 text-green-600 hover:text-green-800 transition-colors'>
+                                        <LucideIcon name="CheckCircle" className="w-4 h-4" />
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Approve Delivery</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Are you sure you want to approve delivery <strong>{info.row.original.code}</strong>?
+                                                This action cannot be undone.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleApprove(info.row.original.id)}>
+                                                Approve
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+
+                                <button
+                                    onClick={() => handleRejectClick(info.row.original)}
+                                    className="p-1 text-red-600 hover:text-red-800 transition-colors"
+                                    title="Reject"
+                                >
+                                    <LucideIcon name="XCircle" className="w-4 h-4" />
+                                </button>
+                            </>
                         )}
                     </div>
                 ),
             }),
         ],
-        [users]
+        [deliveries]
     );
 
     const table = useReactTable({
-        data: users,
+        data: deliveries,
         columns,
         state: {
             sorting,
@@ -198,35 +233,19 @@ const Users = () => {
         getPaginationRowModel: getPaginationRowModel(),
     });
 
-    const handleView = (user) => {
-        // Implement view logic - could open a modal or navigate to detail page
-        setPayload(user);
-        setMode('view');
-        setIsIndexShown(false);
-    }
-
     useEffect(() => {
         if (isIndexShown) {
-            fetchUsers();
+            fetchDeliveries();
         }
     }, [isIndexShown]);
 
     return (
-        <DashboardLayout header="Users">
+        <DashboardLayout header="Approval Deliveries">
             <div className="py-6">
                 {isIndexShown && (
                     <Card className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <CardHeader className="flex justify-between items-center flex-row">
-                            <CardTitle>User List</CardTitle>
-                            <button
-                                style={{ display: hasPermission('users/create') || hasRole('admin') ? 'inline-flex' : 'none' }}
-                                type="button"
-                                className="bg-primary text-white dark:text-gray-100 px-4 py-2 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 text-sm font-medium"
-                                onClick={handleAdd}
-                            >
-                                <LucideIcon name="Plus" className="w-4 h-4 mr-2 inline-block text-white dark:text-gray-100" />
-                                Add User
-                            </button>
+                            <CardTitle>Deliveries Approval List</CardTitle>
                         </CardHeader>
                         <Separator />
                         <CardContent className="mt-4">
@@ -244,12 +263,12 @@ const Users = () => {
                                             <input
                                                 value={filtering}
                                                 onChange={e => setFiltering(e.target.value)}
-                                                placeholder="Search users..."
+                                                placeholder="Search deliveries..."
                                                 className="px-3 py-2 bg-white dark:bg-gray-800 border-none focus:ring-300 dark:focus:ring-gray-600 rounded-sm"
                                             />
                                         </div>
                                         <div className="text-sm text-gray-500">
-                                            Showing {table.getPrePaginationRowModel().rows.length} of {users.length} users
+                                            Showing {table.getPrePaginationRowModel().rows.length} of {deliveries.length} deliveries
                                         </div>
                                     </div>
 
@@ -271,9 +290,9 @@ const Users = () => {
                                                                         header.getContext()
                                                                     )}
                                                                     {header.column.getIsSorted() && (
-                                                                        <LucideIcon 
-                                                                            name={header.column.getIsSorted() === 'asc' ? 'ChevronUp' : 'ChevronDown'} 
-                                                                            className="w-4 h-4" 
+                                                                        <LucideIcon
+                                                                            name={header.column.getIsSorted() === 'asc' ? 'ChevronUp' : 'ChevronDown'}
+                                                                            className="w-4 h-4"
                                                                         />
                                                                     )}
                                                                 </div>
@@ -353,21 +372,59 @@ const Users = () => {
                         </CardContent>
                     </Card>
                 )}
+
+                {/* Reject Dialog */}
+                <Dialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
+                    <DialogContent className="sm:max-w-[500px]">
+                        <DialogHeader>
+                            <DialogTitle>Reject Delivery</DialogTitle>
+                            <DialogDescription>
+                                Please provide a reason for rejecting delivery <strong>{selectedDelivery?.code}</strong>
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="py-4">
+                            <label className="block text-sm font-medium mb-2">
+                                Rejection Reason <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                value={rejectReason}
+                                onChange={(e) => setRejectReason(e.target.value)}
+                                placeholder="Enter reason for rejection..."
+                                className="w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+                                required
+                            />
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => {
+                                    setShowRejectDialog(false);
+                                    setRejectReason('');
+                                    setSelectedDelivery(null);
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={handleRejectSubmit}
+                            >
+                                Reject Delivery
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <DetailPage
                     show={!isIndexShown && mode === 'view' && payload}
                     onCancel={handleCancel}
                     payload={payload}
-                />
-                <FormPage
-                    show={!isIndexShown && ((mode === 'edit' && payload) || mode === 'add')}
-                    mode={mode}
-                    payload={payload}
-                    onSubmit={handleSubmit}
-                    onCancel={handleCancel}
                 />
             </div>
         </DashboardLayout>
     )
 }
 
-export default Users
+export default ApprovalDelivery;

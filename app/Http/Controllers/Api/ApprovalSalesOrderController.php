@@ -49,35 +49,6 @@ class ApprovalSalesOrderController extends Controller
             $approve->approved_by       = $request->user()->id;
             $approve->save();
 
-            // ---------- Untuk Delivery dan Pengurangan Stock ---------- //
-            // $checkStock = new Stock();
-            // foreach ($salesOrder->items as $item) {
-            //     $stock = $checkStock->where('item_id', $item->item_id)->where('warehouse_id', $request->warehouse_id)->first();
-            //     if ($stock) {
-            //         if ($stock->quantity < $item->quantity) {
-            //             throw new \Exception("Stok tidak cukup untuk item: " . $item->item->name);
-            //         }
-            //         $stock->quantity -= $item->quantity;
-            //         $stock->save();
-            //     } else {
-            //         throw new \Exception("Tidak ada catatan stok ditemukan untuk item: " . $item->item->name);
-            //     }
-            // }
-
-            // $delivery = new Delivery();
-            // $delivery->sales_order_id = $salesOrder->id;
-            // $delivery->user_id        = $request->user()->id;
-            // $delivery->warehouse_id   = $request->warehouse_id;
-            // $delivery->status         = 'pending';
-            // $delivery->save();
-
-            // foreach ($salesOrder->items as $item) {
-            //     $delivery->items()->create([
-            //         'item_id'   => $item->item_id,
-            //         'quantity'  => $item->quantity,
-            //     ]);
-            // }
-
             DB::commit();
             return response()->json([
                 'message' => 'Sales order approved successfully.'

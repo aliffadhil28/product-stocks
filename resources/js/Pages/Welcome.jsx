@@ -3,311 +3,360 @@ import { Link, Head } from '@inertiajs/react';
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
         <>
-            <Head title="Welcome" />
-            <div className="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
-                <div className="sm:fixed sm:top-0 sm:right-0 p-6 text-end">
-                    {auth.user ? (
-                        <Link
-                            href={route('admin.dashboard')}
-                            className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                        >
-                            Dashboard
-                        </Link>
-                    ) : (
-                        <>
-                            <Link
-                                href={route('login')}
-                                className="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Log in
-                            </Link>
+            <Head title="Paws & Claws Grooming Salon" />
+            <div className="min-h-screen bg-paw-print">
+                {/* Header */}
+                <header className="bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="flex justify-between items-center py-4">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0 flex items-center">
+                                    <div className="w-10 h-10 bg-soft-blue rounded-full flex items-center justify-center">
+                                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                        </svg>
+                                    </div>
+                                    <span className="ml-3 text-xl font-light text-gray-700">Paws & Claws</span>
+                                </div>
+                            </div>
 
-                            <Link
-                                href={route('register')}
-                                className="ms-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                            >
-                                Register
-                            </Link>
-                        </>
-                    )}
-                </div>
-
-                <div className="max-w-7xl mx-auto p-6 lg:p-8">
-                    <div className="flex justify-center">
-                        <svg
-                            viewBox="0 0 62 65"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-16 w-auto bg-gray-100 dark:bg-gray-900"
-                        >
-                            <path
-                                d="M61.8548 14.6253C61.8778 14.7102 61.8895 14.7978 61.8897 14.8858V28.5615C61.8898 28.737 61.8434 28.9095 61.7554 29.0614C61.6675 29.2132 61.5409 29.3392 61.3887 29.4265L49.9104 36.0351V49.1337C49.9104 49.4902 49.7209 49.8192 49.4118 49.9987L25.4519 63.7916C25.3971 63.8227 25.3372 63.8427 25.2774 63.8639C25.255 63.8714 25.2338 63.8851 25.2101 63.8913C25.0426 63.9354 24.8666 63.9354 24.6991 63.8913C24.6716 63.8838 24.6467 63.8689 24.6205 63.8589C24.5657 63.8389 24.5084 63.8215 24.456 63.7916L0.501061 49.9987C0.348882 49.9113 0.222437 49.7853 0.134469 49.6334C0.0465019 49.4816 0.000120578 49.3092 0 49.1337L0 8.10652C0 8.01678 0.0124642 7.92953 0.0348998 7.84477C0.0423783 7.8161 0.0598282 7.78993 0.0697995 7.76126C0.0884958 7.70891 0.105946 7.65531 0.133367 7.6067C0.152063 7.5743 0.179485 7.54812 0.20192 7.51821C0.230588 7.47832 0.256763 7.43719 0.290416 7.40229C0.319084 7.37362 0.356476 7.35243 0.388883 7.32751C0.425029 7.29759 0.457436 7.26518 0.498568 7.2415L12.4779 0.345059C12.6296 0.257786 12.8015 0.211853 12.9765 0.211853C13.1515 0.211853 13.3234 0.257786 13.475 0.345059L25.4531 7.2415H25.4556C25.4955 7.26643 25.5292 7.29759 25.5653 7.32626C25.5977 7.35119 25.6339 7.37362 25.6625 7.40104C25.6974 7.43719 25.7224 7.47832 25.7523 7.51821C25.7735 7.54812 25.8021 7.5743 25.8196 7.6067C25.8483 7.65656 25.8645 7.70891 25.8844 7.76126C25.8944 7.78993 25.9118 7.8161 25.9193 7.84602C25.9423 7.93096 25.954 8.01853 25.9542 8.10652V33.7317L35.9355 27.9844V14.8846C35.9355 14.7973 35.948 14.7088 35.9704 14.6253C35.9792 14.5954 35.9954 14.5692 36.0053 14.5405C36.0253 14.4882 36.0427 14.4346 36.0702 14.386C36.0888 14.3536 36.1163 14.3274 36.1375 14.2975C36.1674 14.2576 36.1923 14.2165 36.2272 14.1816C36.2559 14.1529 36.292 14.1317 36.3244 14.1068C36.3618 14.0769 36.3942 14.0445 36.4341 14.0208L48.4147 7.12434C48.5663 7.03694 48.7383 6.99094 48.9133 6.99094C49.0883 6.99094 49.2602 7.03694 49.4118 7.12434L61.3899 14.0208C61.4323 14.0457 61.4647 14.0769 61.5021 14.1055C61.5333 14.1305 61.5694 14.1529 61.5981 14.1803C61.633 14.2165 61.6579 14.2576 61.6878 14.2975C61.7103 14.3274 61.7377 14.3536 61.7551 14.386C61.7838 14.4346 61.8 14.4882 61.8199 14.5405C61.8312 14.5692 61.8474 14.5954 61.8548 14.6253ZM59.893 27.9844V16.6121L55.7013 19.0252L49.9104 22.3593V33.7317L59.8942 27.9844H59.893ZM47.9149 48.5566V37.1768L42.2187 40.4299L25.953 49.7133V61.2003L47.9149 48.5566ZM1.99677 9.83281V48.5566L23.9562 61.199V49.7145L12.4841 43.2219L12.4804 43.2194L12.4754 43.2169C12.4368 43.1945 12.4044 43.1621 12.3682 43.1347C12.3371 43.1097 12.3009 43.0898 12.2735 43.0624L12.271 43.0586C12.2386 43.0275 12.2162 42.9888 12.1887 42.9539C12.1638 42.9203 12.1339 42.8916 12.114 42.8567L12.1127 42.853C12.0903 42.8156 12.0766 42.7707 12.0604 42.7283C12.0442 42.6909 12.023 42.656 12.013 42.6161C12.0005 42.5688 11.998 42.5177 11.9931 42.4691C11.9881 42.4317 11.9781 42.3943 11.9781 42.3569V15.5801L6.18848 12.2446L1.99677 9.83281ZM12.9777 2.36177L2.99764 8.10652L12.9752 13.8513L22.9541 8.10527L12.9752 2.36177H12.9777ZM18.1678 38.2138L23.9574 34.8809V9.83281L19.7657 12.2459L13.9749 15.5801V40.6281L18.1678 38.2138ZM48.9133 9.14105L38.9344 14.8858L48.9133 20.6305L58.8909 14.8846L48.9133 9.14105ZM47.9149 22.3593L42.124 19.0252L37.9323 16.6121V27.9844L43.7219 31.3174L47.9149 33.7317V22.3593ZM24.9533 47.987L39.59 39.631L46.9065 35.4555L36.9352 29.7145L25.4544 36.3242L14.9907 42.3482L24.9533 47.987Z"
-                                fill="#FF2D20"
-                            />
-                        </svg>
+                            <div className="flex items-center space-x-4">
+                                {auth.user ? (
+                                    <Link
+                                        href={route('admin.dashboard')}
+                                        className="bg-soft-blue text-white px-5 py-2 rounded-lg font-medium hover:bg-soft-blue-dark transition duration-300"
+                                    >
+                                        Dashboard
+                                    </Link>
+                                ) : (
+                                    <div className="flex items-center space-x-4">
+                                        <Link
+                                            href={route('login')}
+                                            className="text-gray-600 hover:text-soft-blue font-medium transition duration-300"
+                                        >
+                                            Masuk
+                                        </Link>
+                                        <Link
+                                            href={route('register')}
+                                            className="bg-soft-orange text-white px-5 py-2 rounded-lg font-medium hover:bg-soft-orange-dark transition duration-300"
+                                        >
+                                            Reservasi
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
+                </header>
 
-                    <div className="mt-16">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                            <a
-                                href="https://laravel.com/docs"
-                                className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500"
-                            >
-                                <div>
-                                    <div className="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            className="w-7 h-7 stroke-red-500"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                                            />
-                                        </svg>
-                                    </div>
-
-                                    <h2 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">
-                                        Documentation
-                                    </h2>
-
-                                    <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                        Laravel has wonderful documentation covering every aspect of the framework.
-                                        Whether you are a newcomer or have prior experience with Laravel, we recommend
-                                        reading our documentation from beginning to end.
-                                    </p>
-                                </div>
-
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="1.5"
-                                    className="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6"
+                {/* Hero Section */}
+                <section className="relative py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center">
+                            <h1 className="text-4xl md:text-5xl font-light text-gray-800 mb-6 leading-tight">
+                                Perawatan & Grooming
+                                <span className="block text-soft-blue">Profesional untuk Hewan Peliharaan</span>
+                            </h1>
+                            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+                                Berikan perawatan terbaik untuk sahabat berbulu Anda.
+                                Layanan grooming profesional dengan penuh kasih sayang.
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Link
+                                    href={route('register')}
+                                    className="bg-soft-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-soft-blue-dark transition duration-300 shadow-sm"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                    />
-                                </svg>
-                            </a>
+                                    Reservasi Sekarang
+                                </Link>
+                                <button className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition duration-300">
+                                    Lihat Layanan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                            <a
-                                href="https://laracasts.com"
-                                className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500"
-                            >
-                                <div>
-                                    <div className="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            className="w-7 h-7 stroke-red-500"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"
-                                            />
-                                        </svg>
-                                    </div>
+                {/* Services Section */}
+                <section className="py-16 bg-white/50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl font-light text-gray-800 mb-4">Layanan Kami</h2>
+                            <p className="text-gray-600 max-w-2xl mx-auto">
+                                Berbagai layanan grooming lengkap untuk semua kebutuhan hewan peliharaan Anda
+                            </p>
+                        </div>
 
-                                    <h2 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">
-                                        Laracasts
-                                    </h2>
-
-                                    <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                        Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript
-                                        development. Check them out, see for yourself, and massively level up your
-                                        development skills in the process.
-                                    </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {/* Service 1 */}
+                            <div className="bg-white rounded-xl p-6 hover:shadow-md transition duration-300 border border-gray-100">
+                                <div className="w-12 h-12 bg-soft-blue/10 rounded-lg flex items-center justify-center mb-4">
+                                    <svg className="w-6 h-6 text-soft-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                    </svg>
                                 </div>
+                                <h3 className="text-xl font-medium text-gray-800 mb-3">Paket Grooming Lengkap</h3>
+                                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                                    Perawatan spa lengkap termasuk mandi, potong bulu, pemotongan kuku, pembersihan telinga, dan sikat gigi.
+                                </p>
+                                <div className="text-soft-orange font-medium">Rp 150.000 - 300.000</div>
+                            </div>
 
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="1.5"
-                                    className="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                    />
-                                </svg>
-                            </a>
-
-                            <a
-                                href="https://laravel-news.com"
-                                className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500"
-                            >
-                                <div>
-                                    <div className="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            className="w-7 h-7 stroke-red-500"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 01-2.25 2.25M16.5 7.5V18a2.25 2.25 0 002.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 002.25 2.25h13.5M6 7.5h3v3H6v-3z"
-                                            />
-                                        </svg>
-                                    </div>
-
-                                    <h2 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">
-                                        Laravel News
-                                    </h2>
-
-                                    <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                        Laravel News is a community driven portal and newsletter aggregating all of the
-                                        latest and most important news in the Laravel ecosystem, including new package
-                                        releases and tutorials.
-                                    </p>
+                            {/* Service 2 */}
+                            <div className="bg-white rounded-xl p-6 hover:shadow-md transition duration-300 border border-gray-100">
+                                <div className="w-12 h-12 bg-soft-orange/10 rounded-lg flex items-center justify-center mb-4">
+                                    <svg className="w-6 h-6 text-soft-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                    </svg>
                                 </div>
+                                <h3 className="text-xl font-medium text-gray-800 mb-3">Mandi & Sisir</h3>
+                                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                                    Mandi menyegarkan dengan shampoo premium, sisir menyeluruh, dan kondisioner bulu.
+                                </p>
+                                <div className="text-soft-orange font-medium">Rp 75.000 - 150.000</div>
+                            </div>
 
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth="1.5"
-                                    className="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                    />
-                                </svg>
-                            </a>
+                            {/* Service 3 */}
+                            <div className="bg-white rounded-xl p-6 hover:shadow-md transition duration-300 border border-gray-100">
+                                <div className="w-12 h-12 bg-soft-blue/10 rounded-lg flex items-center justify-center mb-4">
+                                    <svg className="w-6 h-6 text-soft-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-medium text-gray-800 mb-3">Perawatan Spa Premium</h3>
+                                <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                                    Paket premium dengan facial blueberry, pijat kaki, dan aromaterapi untuk relaksasi.
+                                </p>
+                                <div className="text-soft-orange font-medium">Rp 250.000 - 450.000</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                            <div className="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                                <div>
-                                    <div className="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth="1.5"
-                                            className="w-7 h-7 stroke-red-500"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64"
-                                            />
-                                        </svg>
+                {/* Features Section */}
+                <section className="py-16">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            <div>
+                                <h2 className="text-3xl font-light text-gray-800 mb-6">
+                                    Mengapa Memilih Paws & Claws?
+                                </h2>
+                                <div className="space-y-6">
+                                    <div className="flex items-start">
+                                        <div className="flex-shrink-0 w-10 h-10 bg-soft-blue/10 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-soft-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-medium text-gray-800 mb-2">Groomer Bersertifikat</h3>
+                                            <p className="text-gray-600 text-sm">Tim kami terdiri dari groomer profesional yang terlatih dan bersertifikat.</p>
+                                        </div>
                                     </div>
 
-                                    <h2 className="mt-6 text-xl font-semibold text-gray-900 dark:text-white">
-                                        Vibrant Ecosystem
-                                    </h2>
+                                    <div className="flex items-start">
+                                        <div className="flex-shrink-0 w-10 h-10 bg-soft-orange/10 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-soft-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-medium text-gray-800 mb-2">Fasilitas Modern</h3>
+                                            <p className="text-gray-600 text-sm">Peralatan terkini dan lingkungan yang bersih dan aman untuk hewan peliharaan Anda.</p>
+                                        </div>
+                                    </div>
 
-                                    <p className="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-                                        Laravel's robust library of first-party tools and libraries, such as{' '}
-                                        <a
-                                            href="https://forge.laravel.com"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Forge
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://vapor.laravel.com"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Vapor
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://nova.laravel.com"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Nova
-                                        </a>
-                                        , and{' '}
-                                        <a
-                                            href="https://envoyer.io"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Envoyer
-                                        </a>{' '}
-                                        help you take your projects to the next level. Pair them with powerful open
-                                        source libraries like{' '}
-                                        <a
-                                            href="https://laravel.com/docs/billing"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Cashier
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://laravel.com/docs/dusk"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Dusk
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://laravel.com/docs/broadcasting"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Echo
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://laravel.com/docs/horizon"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Horizon
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://laravel.com/docs/sanctum"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Sanctum
-                                        </a>
-                                        ,{' '}
-                                        <a
-                                            href="https://laravel.com/docs/telescope"
-                                            className="underline hover:text-gray-700 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500"
-                                        >
-                                            Telescope
-                                        </a>
-                                        , and more.
+                                    <div className="flex items-start">
+                                        <div className="flex-shrink-0 w-10 h-10 bg-soft-blue/10 rounded-lg flex items-center justify-center mr-4">
+                                            <svg className="w-5 h-5 text-soft-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-medium text-gray-800 mb-2">Jadwal Fleksibel</h3>
+                                            <p className="text-gray-600 text-sm">Booking online mudah dengan janji temu malam dan akhir pekan tersedia.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="relative">
+                                <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+                                    <div className="aspect-w-16 aspect-h-12 bg-gray-50 rounded-lg mb-6 overflow-hidden">
+                                        <div className="w-full h-64 bg-gradient-to-br from-soft-blue/10 to-soft-orange/10 flex items-center justify-center">
+                                            <svg className="w-24 h-24 text-soft-blue opacity-60" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <h3 className="text-xl font-medium text-gray-800 mb-4">Hewan Bahagia, Pemilik Tenang</h3>
+                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                        Bergabunglah dengan ribuan pemilik hewan peliharaan yang mempercayakan keluarga berbulu mereka kepada kami.
+                                        Komitmen kami terhadap kualitas dan perawatan memastikan pengalaman terbaik untuk hewan peliharaan Anda.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <div className="flex justify-center mt-16 px-6 sm:items-center sm:justify-between">
-                        <div className="text-center text-sm sm:text-start">&nbsp;</div>
-
-                        <div className="text-center text-sm text-gray-500 dark:text-gray-400 sm:text-end sm:ms-0">
-                            Laravel v{laravelVersion} (PHP v{phpVersion})
+                {/* Testimonial Section */}
+                <section className="py-16 bg-white/50">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl font-light text-gray-800 mb-4">Apa Kata Pelanggan</h2>
+                            <p className="text-gray-600 max-w-2xl mx-auto">
+                                Testimoni dari pemilik hewan yang sudah mempercayakan perawatan kepada kami
+                            </p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-white rounded-xl p-6 border border-gray-100">
+                                <div className="flex items-center mb-4">
+                                    <div className="w-10 h-10 bg-soft-blue/10 rounded-full flex items-center justify-center">
+                                        <span className="text-soft-blue font-medium">SD</span>
+                                    </div>
+                                    <div className="ml-3">
+                                        <h4 className="font-medium text-gray-800">Sari Dewi</h4>
+                                        <p className="text-gray-500 text-sm">Pemilik Kucing</p>
+                                    </div>
+                                </div>
+                                <p className="text-gray-600 text-sm italic">
+                                    "Pelayanan sangat ramah dan profesional. Kucing saya pulang bersih dan wangi. Highly recommended!"
+                                </p>
+                            </div>
+                            <div className="bg-white rounded-xl p-6 border border-gray-100">
+                                <div className="flex items-center mb-4">
+                                    <div className="w-10 h-10 bg-soft-orange/10 rounded-full flex items-center justify-center">
+                                        <span className="text-soft-orange font-medium">BA</span>
+                                    </div>
+                                    <div className="ml-3">
+                                        <h4 className="font-medium text-gray-800">Budi Anwar</h4>
+                                        <p className="text-gray-500 text-sm">Pemilik Anjing</p>
+                                    </div>
+                                </div>
+                                <p className="text-gray-600 text-sm italic">
+                                    "Anjing saya yang biasanya takut grooming jadi sangat tenang di sini. Groomernya sabar banget."
+                                </p>
+                            </div>
+                            <div className="bg-white rounded-xl p-6 border border-gray-100">
+                                <div className="flex items-center mb-4">
+                                    <div className="w-10 h-10 bg-soft-blue/10 rounded-full flex items-center justify-center">
+                                        <span className="text-soft-blue font-medium">MR</span>
+                                    </div>
+                                    <div className="ml-3">
+                                        <h4 className="font-medium text-gray-800">Maya Ratna</h4>
+                                        <p className="text-gray-500 text-sm">Pemilik Kucing</p>
+                                    </div>
+                                </div>
+                                <p className="text-gray-600 text-sm italic">
+                                    "Fasilitas bersih dan nyaman. Harga terjangkau untuk kualitas service yang diberikan."
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                {/* CTA Section */}
+                <section className="py-16 bg-gradient-to-r from-soft-blue/10 to-soft-orange/10">
+                    <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+                        <h2 className="text-3xl font-light text-gray-800 mb-6">Siap Memanjakan Hewan Peliharaan Anda?</h2>
+                        <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+                            Reservasi janji temu hari ini dan berikan perawatan mewah yang layak mereka dapatkan.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Link
+                                href={route('register')}
+                                className="bg-soft-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-soft-blue-dark transition duration-300 shadow-sm"
+                            >
+                                Reservasi Sekarang
+                            </Link>
+                            <button className="bg-white text-gray-700 px-8 py-3 rounded-lg font-medium hover:bg-gray-50 transition duration-300 border border-gray-200">
+                                Hubungi Kami: (021) 1234-5678
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Footer */}
+                <footer className="bg-gray-800/90 text-white py-12">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                            <div>
+                                <h3 className="text-xl font-light mb-4">Paws & Claws</h3>
+                                <p className="text-gray-300 text-sm">
+                                    Layanan grooming hewan peliharaan profesional dengan penuh kasih sayang untuk sahabat berbulu Anda.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 className="text-lg font-medium mb-4">Layanan</h4>
+                                <ul className="space-y-2 text-gray-300 text-sm">
+                                    <li>Grooming Lengkap</li>
+                                    <li>Mandi & Sisir</li>
+                                    <li>Perawatan Spa</li>
+                                    <li>Potong Kuku</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-lg font-medium mb-4">Kontak</h4>
+                                <ul className="space-y-2 text-gray-300 text-sm">
+                                    <li>Jl. Melati No. 123</li>
+                                    <li>Jakarta Selatan, 12345</li>
+                                    <li>(021) 1234-5678</li>
+                                    <li>hello@pawsclaws.id</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 className="text-lg font-medium mb-4">Jam Operasional</h4>
+                                <ul className="space-y-2 text-gray-300 text-sm">
+                                    <li>Senin-Jumat: 08.00-18.00</li>
+                                    <li>Sabtu: 09.00-17.00</li>
+                                    <li>Minggu: 10.00-16.00</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+                            <p>&copy; 2024 Paws & Claws Grooming Salon. All rights reserved.</p>
+                        </div>
+                    </div>
+                </footer>
             </div>
 
             <style>{`
-                .bg-dots-darker {
-                    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(0,0,0,0.07)'/%3E%3C/svg%3E");
+                .bg-paw-print {
+                    background-color: #fafafa;
+                    background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30,40 C25,35 20,40 25,45 C30,50 35,45 30,40 Z M45,30 C40,25 35,30 40,35 C45,40 50,35 45,30 Z M60,40 C55,35 50,40 55,45 C60,50 65,45 60,40 Z M50,50 C45,45 40,50 45,55 C50,60 55,55 50,50 Z M35,60 C30,55 25,60 30,65 C35,70 40,65 35,60 Z M65,60 C60,55 55,60 60,65 C65,70 70,65 65,60 Z' fill='%2336ace1' opacity='0.03'/%3E%3C/svg%3E");
                 }
-                @media (prefers-color-scheme: dark) {
-                    .dark\\:bg-dots-lighter {
-                        background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.22676 0C1.91374 0 2.45351 0.539773 2.45351 1.22676C2.45351 1.91374 1.91374 2.45351 1.22676 2.45351C0.539773 2.45351 0 1.91374 0 1.22676C0 0.539773 0.539773 0 1.22676 0Z' fill='rgba(255,255,255,0.07)'/%3E%3C/svg%3E");
-                    }
+                .bg-soft-blue {
+                    background-color: #36ace1;
+                }
+                .bg-soft-blue-dark {
+                    background-color: #2a8cc7;
+                }
+                .bg-soft-orange {
+                    background-color: #f79f1d;
+                }
+                .bg-soft-orange-dark {
+                    background-color: #e68e17;
+                }
+                .text-soft-blue {
+                    color: #36ace1;
+                }
+                .text-soft-orange {
+                    color: #f79f1d;
+                }
+                .bg-soft-blue\\/10 {
+                    background-color: rgba(54, 172, 225, 0.1);
+                }
+                .bg-soft-orange\\/10 {
+                    background-color: rgba(247, 159, 29, 0.1);
+                }
+                .from-soft-blue\\/10 {
+                    --tw-gradient-from: rgba(54, 172, 225, 0.1);
+                    --tw-gradient-to: rgba(54, 172, 225, 0);
+                    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+                }
+                .to-soft-orange\\/10 {
+                    --tw-gradient-to: rgba(247, 159, 29, 0.1);
                 }
             `}</style>
         </>

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
@@ -37,24 +38,6 @@ class UserController extends Controller
                 'line' => $e->getLine(),
                 'file' => $e->getFile()
             ], 500);
-        }
-    }
-
-    public function testNotification(){
-        try {
-            $message = 'Test Notifikasi ya gess !!';
-            $user_id = Auth::user()->id;
-
-            broadcast(new UserNotification($user_id, $message));
-
-            Log::info("Broadcast event dikirim ke user {$user_id}");
-            return response()->json([
-                'status' => 'sent'
-            ],200);
-        }catch (\Exception $e){
-            return response()->json([
-                'message' => $e->getMessage()
-            ],500);
         }
     }
 
@@ -111,14 +94,85 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id){
+        DB::beginTransaction();
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+                'password' => 'nullable|string|min:8',
+                'roles' => 'required|array|min:1',
+            ]);
 
+            $user = User::findOrFail($id);
+            $user->name = $validated['name'];
+            $user->email = $validated['email'];
+            if (!empty($validated['password'])) {
+                $user->password = Hash::make($validated['password']);
+            }
+            $user->save();
+
+            $user->syncRoles($validated['roles']);
+            DB::commit();
+            return response()->json([
+                'message' => 'User updated successfully',
+                'data' => $user,
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Failed to update user.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(Request $request){
+        DB::beginTransaction();
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email',
+                'password' => 'required|string|min:8',
+                'roles' => 'required|array|min:1',
+            ]);
 
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password'])
+            ]);
+
+            $user->assignRole($validated['roles']);
+            DB::commit();
+            return response()->json([
+                'message' => 'User created successfully',
+                'data' => $user,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Failed to create user.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function destroy(Request $request, $id){
+    public function destroy(Request $request){
+        DB::beginTransaction();
+        try {
+            $user = User::findOrFail($request->id);
+            $user->delete();
 
+            DB::commit();
+            return response()->json([
+                'message' => 'User deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Failed to delete user.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

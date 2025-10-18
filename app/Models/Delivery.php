@@ -45,6 +45,11 @@ class Delivery extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function approver()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     public function items()
     {
         return $this->hasMany(DeliveryItem::class);
