@@ -31,11 +31,11 @@ import { numberFormat, numberToCurrency } from '@/utils/helper'
 const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
     const formRef = useRef(null);
 
-    const [suppliers, setSuppliers] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const [items, setItems] = useState([]);
     const [formData, setFormData] = useState({
         id: '',
-        supplier_id: '',
+        customer_id: '',
         order_items: [
             {
                 item_id: '',
@@ -50,7 +50,7 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
         if (!show) {
             setFormData({
                 id: '',
-                supplier_id: '',
+                customer_id: '',
                 order_items: [
                     {
                         item_id: '',
@@ -68,8 +68,12 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
         if (payload && mode === 'edit') {
             setFormData({
                 id: payload.id || '',
-                supplier_id: payload.supplier_id || '',
-                order_items: payload.order_items || [
+                customer_id: payload.customer_id || '',
+                order_items: payload.items.map(item => ({
+                    item_id: item.id || '',
+                    quantity: item.quantity || '',
+                    sub_total: item.subtotal || ''
+                })) || [
                     {
                         item_id: '',
                         quantity: '',
@@ -83,7 +87,7 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
         if (mode === 'add') {
             setFormData({
                 id: '',
-                supplier_id: '',
+                customer_id: '',
                 order_items: [
                     {
                         item_id: '',
@@ -97,9 +101,9 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
 
     const fetchFormData = async () => {
         try {
-            const response = await fetchPost('PurchaseOrderController', 'getFormData', {});
+            const response = await fetchPost('SalesOrderController', 'getFormData', {});
             if (response) {
-                setSuppliers(response?.suppliers || []);
+                setCustomers(response?.customers || []);
                 setItems(response?.items || []);
             }
         } catch (error) {
@@ -153,14 +157,14 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
 
     const calculateTotalAmount = () => {
         return formData.order_items.reduce((total, item) => {
-            return total + (parseFloat(item.sub_total) || 0);
+            return total + (parseFloat(item.sub_total) || parseFloat(item.subtotal) || 0);
         }, 0);
     };
 
     const handleSubmit = () => {
         const data = new FormData();
         data.append('id', formData.id);
-        data.append('supplier_id', formData.supplier_id);
+        data.append('customer_id', formData.customer_id);
         data.append('order_items', JSON.stringify(formData.order_items));
         const formDataEntries = Object.fromEntries(data.entries());
         onSubmit(formDataEntries);
@@ -172,12 +176,12 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
         <Card className="w-full mx-auto sm:px-6 lg:px-8 p-4">
             <CardHeader className="dark:text-white rounded-t-lg">
                 <CardTitle className="text-2xl font-bold flex items-center gap-2">
-                    {mode === 'add' ? 'Add New PO' : 'Edit PO'}
+                    {mode === 'add' ? 'Add New SO' : 'Edit SO'}
                 </CardTitle>
                 <CardDescription>
                     {mode === 'add'
-                        ? 'Fill in the form to add a new purchase order.'
-                        : 'Update the purchase order information below.'}
+                        ? 'Fill in the form to add a new sales order.'
+                        : 'Update the sales order information below.'}
                 </CardDescription>
             </CardHeader>
 
@@ -185,17 +189,17 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
                 <ScrollArea className="h-96">
                     <div className="space-y-4 pr-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1" htmlFor="supplier">
-                                Supplier
+                            <label className="block text-sm font-medium mb-1" htmlFor="customer">
+                                Customer
                             </label>
                             <ComboBox
-                                data={suppliers.map(supplier => ({
-                                    label: supplier.name,
-                                    value: supplier.id
+                                data={customers.map(customer => ({
+                                    label: customer.name,
+                                    value: customer.id
                                 }))}
-                                name="supplier"
-                                value={formData.supplier_id}
-                                setValue={(value) => setFormData((prev) => ({ ...prev, supplier_id: value }))}
+                                name="customer"
+                                value={formData.customer_id}
+                                setValue={(value) => setFormData((prev) => ({ ...prev, customer_id: value }))}
                             />
                         </div>
 
@@ -268,7 +272,7 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    value={numberFormat(orderItem.sub_total)}
+                                                    value={numberFormat(orderItem.sub_total || orderItem.subtotal || 0)}
                                                     onChange={(e) => handleOrderItemChange(index, 'sub_total', e.target.value)}
                                                     required
                                                     readOnly

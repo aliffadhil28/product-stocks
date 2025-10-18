@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, forwardRef, useImperativeHandle } from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -16,10 +16,31 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-const ComboBox = ({ data, name, setValue, value }) => {
+const ComboBox = forwardRef(({ data, name, setValue, value }, ref) => {
     const [open, setOpen] = useState(false)
+    const [internalValue, setInternalValue] = useState(value || "");
+    
+    // Sync internal value dengan prop value
+    useState(() => {
+        setInternalValue(value || "");
+    }, [value]);
+    
+    // Expose methods to parent component via ref (optional)
+    useImperativeHandle(ref, () => ({
+        getValue: () => internalValue,
+        // setValue: (newValue) => {            
+        //     setInternalValue(newValue);
+        //     setValue?.(newValue);
+        // },
+        clearValue: () => {
+            setInternalValue("");
+            setValue?.("");
+        }
+    }));
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
+            {internalValue && console.log(internalValue, data.find((item) => item.value === internalValue)?.label)}
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -27,8 +48,8 @@ const ComboBox = ({ data, name, setValue, value }) => {
                     aria-expanded={open}
                     className="w-full justify-between"
                 >
-                    {value
-                        ? data.find((item) => item.value === value)?.label
+                    {internalValue
+                        ? data.find((item) => item.value === internalValue)?.label
                         : `Select ${name}...`}
                     <ChevronsUpDown className="opacity-50" />
                 </Button>
@@ -44,15 +65,16 @@ const ComboBox = ({ data, name, setValue, value }) => {
                                     key={item.value}
                                     value={item.value}
                                     onSelect={() => {
-                                        setValue(value === item.value ? "" : item.value)
-                                        setOpen(false)
+                                        setInternalValue(item.value);
+                                        setValue?.(item.value);
+                                        setOpen(false);
                                     }}
                                 >
                                     {item.label}
                                     <Check
                                         className={cn(
                                             "ml-auto",
-                                            value === item.value ? "opacity-100" : "opacity-0"
+                                            internalValue === item.value ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>
@@ -63,6 +85,7 @@ const ComboBox = ({ data, name, setValue, value }) => {
             </PopoverContent>
         </Popover>
     )
-}
+});
 
-export default ComboBox
+ComboBox.displayName = "ComboBox";
+export default ComboBox;
