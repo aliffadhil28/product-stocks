@@ -5,8 +5,8 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Separator } from '@/components/ui/separator';
+} from "@/Components/ui/card"
+import { Separator } from '@/Components/ui/separator';
 import { hasPermission, hasRole } from '@/utils/userAccess';
 import { fetchPost } from '@/hooks/Api';
 

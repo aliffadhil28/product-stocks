@@ -8,7 +8,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/Components/ui/card"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,7 +19,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/Components/ui/alert-dialog"
 import {
     Dialog,
     DialogContent,
@@ -27,9 +27,9 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Separator } from '@/components/ui/separator';
+} from "@/Components/ui/dialog"
+import { Button } from "@/Components/ui/button"
+import { Separator } from '@/Components/ui/separator';
 import { hasPermission, hasRole } from '@/utils/userAccess';
 import { fetchPost } from '@/hooks/Api';
 

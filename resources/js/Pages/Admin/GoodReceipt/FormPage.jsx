@@ -6,7 +6,7 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/Components/ui/card"
 import {
     Dialog,
     DialogContent,
@@ -14,8 +14,8 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+} from "@/Components/ui/dialog"
+import { Button } from "@/Components/ui/button"
 import {
     Command,
     CommandEmpty,
@@ -23,13 +23,13 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from "@/components/ui/command"
+} from "@/Components/ui/command"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover"
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@/Components/ui/popover"
+import { ScrollArea } from '@/Components/ui/scroll-area';
 import { toast } from 'sonner';
 import { fetchPost } from '@/hooks/Api';
 import ComboBox from '@/Components/ComboBox'
