@@ -14,11 +14,23 @@ import { MultiSelect } from '@/Components/ui/multi-select';
 const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
     const formRef = useRef(null);
     const [roles, setRoles] = useState([]);
-    const [selectedRoles, setSelectedRoles] = useState(payload?.role ? [payload.role.map(val => val.id)] : []);
+
+    // PERBAIKAN 1: Inisialisasi selectedRoles yang benar
+    const [selectedRoles, setSelectedRoles] = useState(
+        mode === 'edit' && payload?.role
+            ? payload.role.map(val => val.id)
+            : []
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(formRef.current);
+
+        // Tambahkan selectedRoles ke formData
+        selectedRoles.forEach(roleId => {
+            formData.append('roles[]', roleId);
+        });
+
         onSubmit(formData);
     }
 
@@ -27,23 +39,33 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
             const response = await fetchPost('UserController', 'getRoles');
             if (response) {
                 setRoles(response.data)
-                if (mode === 'edit' && payload.role) {
+                // PERBAIKAN 2: Set selectedRoles hanya jika edit mode
+                if (mode === 'edit' && payload?.role) {
                     setSelectedRoles(payload.role.map(val => val.id))
                 }
             }
-        } catch {
-
+        } catch (error) {
+            console.error('Error fetching roles:', error);
         }
     }
 
     useEffect(() => {
         if (show) {
             fetchRoles()
-        }else{
+        } else {
             formRef.current?.reset();
             setSelectedRoles([]);
         }
     }, [show])
+
+    // PERBAIKAN 3: Reset selectedRoles ketika mode/payload berubah
+    useEffect(() => {
+        if (mode === 'edit' && payload?.role) {
+            setSelectedRoles(payload.role.map(val => val.id));
+        } else {
+            setSelectedRoles([]);
+        }
+    }, [mode, payload]);
 
     return (
         <>
@@ -62,9 +84,8 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
 
                     <form ref={formRef} onSubmit={handleSubmit}>
                         <CardContent className="p-6">
-                            {/* Grid: kiri foto, kanan form */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+                                <input type="hidden" name="id" defaultValue={payload?.id || ''} />
                                 {/* Section Kiri - Profile Image */}
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
@@ -117,8 +138,12 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
                                             <label className="block text-sm font-medium mb-1" htmlFor="role">
                                                 Role
                                             </label>
+                                            {/* PERBAIKAN 4: Struktur options yang benar */}
                                             <MultiSelect
-                                                options={roles.map(role => ({ defaultValue: role.id, label: role.name }))}
+                                                options={roles.map(role => ({
+                                                    value: role.name, // PASTIKAN 'value' bukan 'defaultValue'
+                                                    label: role.name
+                                                }))}
                                                 selected={selectedRoles}
                                                 onChange={setSelectedRoles}
                                                 placeholder='Select roles...'

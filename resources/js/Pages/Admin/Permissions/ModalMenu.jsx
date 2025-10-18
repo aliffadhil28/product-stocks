@@ -46,7 +46,6 @@ const ModalMenu = ({ onClose, onSubmit, groupMenus }) => {
             }
         }
         
-        console.log('Form Data:', Object.fromEntries(formData)); // Debug log
         onSubmit(formData);
         handleClose();
     }

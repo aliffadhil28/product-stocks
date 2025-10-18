@@ -40,7 +40,7 @@ const ComboBox = forwardRef(({ data, name, setValue, value }, ref) => {
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            {internalValue && console.log(internalValue, data.find((item) => item.value === internalValue)?.label)}
+            {/* {internalValue && console.log(internalValue, data.find((item) => item.value === internalValue)?.label)} */}
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"

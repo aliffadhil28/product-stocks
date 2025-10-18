@@ -59,7 +59,6 @@ const FormPage = ({ show, mode, onSubmit, onCancel, payload }) => {
         Object.entries(formData).forEach(([key, value]) => data.append(key, value));
         data.append('id', formData.id);
         const formDataEntries = Object.fromEntries(data.entries());
-        console.log(formDataEntries);
         
         onSubmit(formDataEntries);
     };
