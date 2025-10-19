@@ -15,8 +15,8 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Admin User',
-                'email' => 'admin@product-stocks.com',
-                'password' => bcrypt('NgodingKonsisten2025!'), // Change this to a secure password
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('password'), // Change this to a secure password
                 'role' => 'admin'
             ]
         ];
