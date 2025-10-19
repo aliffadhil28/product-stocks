@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GoodsReceipt;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -22,8 +23,11 @@ class GoodReceiptController extends Controller
 
     public function getFormData()
     {
-        $orders = \App\Models\PurchaseOrder::where('status', 'approved')->get();
-        $warehouses = \App\Models\Warehouse::all();
+        $orders = PurchaseOrder::with('receipt')
+            ->whereDoesntHave('receipt')
+            ->where('status', 'approved')
+            ->get();
+        $warehouses = Warehouse::all();
 
         return response()->json([
             'order' => $orders,

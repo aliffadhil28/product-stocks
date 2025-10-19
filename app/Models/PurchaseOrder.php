@@ -48,4 +48,9 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo(User::class, 'approved_by', 'id');
     }
+
+    public function receipt()
+    {
+        return $this->hasOne(GoodsReceipt::class, 'purchase_order_id', 'id');
+    }
 }

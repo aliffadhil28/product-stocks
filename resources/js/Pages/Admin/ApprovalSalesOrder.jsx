@@ -65,7 +65,6 @@ const ApprovalSalesOrder = () => {
     const [rejectReason, setRejectReason] = useState('');
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [warehouses, setWarehouses] = useState([]);
-    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
     const comboBoxRef = useRef(null);
 
@@ -85,11 +84,12 @@ const ApprovalSalesOrder = () => {
 
     const handleApproveWithRef = (id) => {
         // Jika ada ref, ambil value dari ref, jika tidak pakai state
-        const warehouseValue = comboBoxRef.current.getValue()
+        const warehouseValue = comboBoxRef.current && comboBoxRef.current.getValue();
+        
 
         handleApprove(id, warehouseValue);
 
-        comboBoxRef.current.clearValue()
+        if (comboBoxRef.current) comboBoxRef.current.clearValue()
     };
 
     const handleApprove = async (orderId, warehouseId) => {
