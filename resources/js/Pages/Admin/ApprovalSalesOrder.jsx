@@ -83,26 +83,13 @@ const ApprovalSalesOrder = () => {
         fetchWarehouses();
     }, []);
 
-    const handleComboBoxChange = (value) => {
-        setSelectedWarehouse(value);
-    };
-
-    const clearSelection = () => {
-        setSelectedWarehouse(null);
-        // Hanya clear via ref jika ref tersedia
-        if (comboBoxRef.current) {
-            comboBoxRef.current.clearValue();
-        }
-    };
-
     const handleApproveWithRef = (id) => {
         // Jika ada ref, ambil value dari ref, jika tidak pakai state
-        const warehouseValue = comboBoxRef.current 
-            ? comboBoxRef.current.getValue() 
-            : selectedWarehouse;
-        
+        const warehouseValue = comboBoxRef.current.getValue()
+
         handleApprove(id, warehouseValue);
-        clearSelection();
+
+        comboBoxRef.current.clearValue()
     };
 
     const handleApprove = async (orderId, warehouseId) => {
@@ -207,76 +194,82 @@ const ApprovalSalesOrder = () => {
             columnHelper.display({
                 id: 'actions',
                 header: 'Actions',
-                cell: info => (
-                    <div className="flex gap-2">
-                        {(hasPermission('approval-sales-order/view') || hasRole('admin')) && (
-                            <button
-                                onClick={() => { handleView(info.row.original) }}
-                                className="p-1 text-blue-600 hover:text-blue-800 transition-colors"
-                                title="View"
-                            >
-                                <LucideIcon name="Eye" className="w-4 h-4" />
-                            </button>
-                        )}
-                        {(hasPermission('approval-sales-order/approve') || hasRole('admin')) && info.row.original.status === 'pending' && (
-                            <>
-                                <AlertDialog>
-                                    <AlertDialogTrigger
-                                        className='p-1 text-green-600 hover:text-green-800 transition-colors'
-                                        onClick={() => setSelectedWarehouse(null)} // Reset saat buka dialog
-                                    >
-                                        <LucideIcon name="CheckCircle" className="w-4 h-4" />
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Approve Sales Order</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                <p>
-                                                    Are you sure you want to approve sales order <strong>{info.row.original.code}</strong>?
-                                                    This action cannot be undone.
-                                                </p>
+                cell: info => {
+                    const [selectedWarehouse, setSelectedWarehouse] = useState(null)
 
-                                                <label className="block text-sm font-medium mt-4 mb-2">
-                                                    Select Warehouse <span className="text-red-500">*</span>
-                                                </label>
-                                                <ComboBox
-                                                    ref={comboBoxRef} // Optional ref
-                                                    data={warehouses.map(warehouse => ({
-                                                        label: warehouse.name,
-                                                        value: warehouse.id
-                                                    }))}
-                                                    name="warehouse"
-                                                    value={selectedWarehouse}
-                                                    setValue={setSelectedWarehouse}
-                                                />
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel onClick={() => setSelectedWarehouse(null)}>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction
-                                                onClick={() => {
-                                                    handleApproveWithRef(info.row.original.id);
-                                                    setSelectedWarehouse(null); // Reset setelah approve
-                                                }}
-                                                disabled={!selectedWarehouse}
-                                            >
-                                                Approve
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-
+                    return (
+                        <div className="flex gap-2">
+                            {(hasPermission('approval-sales-order/view') || hasRole('admin')) && (
                                 <button
-                                    onClick={() => handleRejectClick(info.row.original)}
-                                    className="p-1 text-red-600 hover:text-red-800 transition-colors"
-                                    title="Reject"
+                                    onClick={() => { handleView(info.row.original) }}
+                                    className="p-1 text-blue-600 hover:text-blue-800 transition-colors"
+                                    title="View"
                                 >
-                                    <LucideIcon name="XCircle" className="w-4 h-4" />
+                                    <LucideIcon name="Eye" className="w-4 h-4" />
                                 </button>
-                            </>
-                        )}
-                    </div>
-                ),
+                            )}
+                            {(hasPermission('approval-sales-order/approve') || hasRole('admin')) && info.row.original.status === 'pending' && (
+                                <>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger
+                                            className='p-1 text-green-600 hover:text-green-800 transition-colors'
+                                            onClick={() => setSelectedWarehouse(null)} // Reset saat buka dialog
+                                        >
+                                            <LucideIcon name="CheckCircle" className="w-4 h-4" />
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Approve Sales Order</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    <p>
+                                                        Are you sure you want to approve sales order <strong>{info.row.original.code}</strong>?
+                                                        This action cannot be undone.
+                                                    </p>
+
+                                                    <label className="block text-sm font-medium mt-4 mb-2">
+                                                        Select Warehouse <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <ComboBox
+                                                        data={warehouses.map(warehouse => ({
+                                                            label: warehouse.name,
+                                                            value: warehouse.id
+                                                        }))}
+                                                        name="warehouse"
+                                                        value={selectedWarehouse}
+                                                        setValue={setSelectedWarehouse}
+                                                    />
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel onClick={() => setSelectedWarehouse(null)}>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction
+                                                    onClick={() => {
+                                                        handleApproveWithRef(info.row.original.id);
+                                                        setSelectedWarehouse(null); // Reset setelah approve
+                                                    }}
+                                                    disabled={!selectedWarehouse}
+                                                >
+                                                    Approve
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </>
+                            )}
+                            {(hasPermission('approval-sales-order/reject') || hasRole('admin')) && info.row.original.status === 'pending' && (
+                                <>
+                                    <button
+                                        onClick={() => handleRejectClick(info.row.original)}
+                                        className="p-1 text-red-600 hover:text-red-800 transition-colors"
+                                        title="Reject"
+                                    >
+                                        <LucideIcon name="XCircle" className="w-4 h-4" />
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    )
+                },
             }),
         ],
         [orders]
