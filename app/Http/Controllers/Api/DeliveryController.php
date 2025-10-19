@@ -7,7 +7,9 @@ use App\Models\Delivery;
 use App\Models\GoodsReceipt;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
+use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -24,8 +26,11 @@ class DeliveryController extends Controller
 
     public function getFormData()
     {
-        $salesOrders = \App\Models\SalesOrder::where('status', 'approved')->get();
-        $warehouses = \App\Models\Warehouse::all();
+        $salesOrders = SalesOrder::with('delivery')
+            ->whereDoesntHave('delivery')
+            ->where('status', 'approved')
+            ->get();
+        $warehouses = Warehouse::all();
 
         return response()->json([
             'order' => $salesOrders,

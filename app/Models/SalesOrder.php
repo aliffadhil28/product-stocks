@@ -49,4 +49,9 @@ class SalesOrder extends Model
     {
         return $this->hasMany(SalesOrderItem::class);
     }
+
+    public function delivery()
+    {
+        return $this->hasOne(Delivery::class, 'sales_order_id', 'id');
+    }
 }
